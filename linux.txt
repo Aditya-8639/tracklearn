@@ -1,0 +1,6 @@
+SysV  Runlevel	systemd  Target	Description
+       0	poweroff.target	   Shutdown
+       1	rescue.target	     Single-user mode
+       3	multi-user.target	 CLI multi-user mode (no GUI)
+       5	graphical.target	 Multi-user mode with GUI
+       6	reboot.target	     Reboot
