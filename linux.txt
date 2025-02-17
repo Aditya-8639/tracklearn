@@ -4,3 +4,63 @@ SysV  Runlevel	systemd  Target	Description
        3	multi-user.target	 CLI multi-user mode (no GUI)
        5	graphical.target	 Multi-user mode with GUI
        6	reboot.target	     Reboot
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+**Understanding systemd Service File Locations**
+
+Systemd service unit files define how services are started, stopped, and managed on a Linux system. These files are stored in different locations, each serving a distinct purpose.
+
+### 1. **Primary Locations**
+
+#### **System-Installed Service Files**
+- **Location:** `/usr/lib/systemd/system/` (or sometimes `/lib/systemd/system/`)
+- **Purpose:**
+  - Contains service files provided by installed packages.
+  - System updates may overwrite files in this directory.
+  - Users should avoid direct modifications.
+
+#### **Custom and Override Service Files**
+- **Location:** `/etc/systemd/system/`
+- **Purpose:**
+  - Used for custom or modified service configurations.
+  - Overrides any corresponding file in `/usr/lib/systemd/system/`.
+  - Recommended place for user-created services.
+
+#### **Runtime Service Files**
+- **Location:** `/run/systemd/system/`
+- **Purpose:**
+  - Contains dynamically generated unit files.
+  - These files exist only until the system is rebooted.
+
+### 2. **Precedence and Overrides**
+If the same service exists in multiple locations, systemd follows this order of precedence:
+1. `/etc/systemd/system/` (Highest priority, user-defined settings)
+2. `/run/systemd/system/` (Temporary, runtime configurations)
+3. `/usr/lib/systemd/system/` (Default package-installed service files)
+
+### 3. **Modifying and Customizing Services**
+- To modify an existing service without altering system files:
+  ```sh
+  systemctl edit <service-name>
+  ```
+  This creates a drop-in override in `/etc/systemd/system/<service-name>.d/`.
+
+- To enable a custom service:
+  ```sh
+  systemctl enable <service-name>
+  ```
+
+- To reload systemd after making changes:
+  ```sh
+  systemctl daemon-reload
+  ```
+
+### **Best Practices**
+- Store custom services in `/etc/systemd/system/`.
+- Use `systemctl edit` to modify services instead of changing system files directly.
+- Always run `systemctl daemon-reload` after modifying service files.
+
+By following these practices, you ensure that your systemd services remain functional, organized, and resistant to package updates.
+
+
