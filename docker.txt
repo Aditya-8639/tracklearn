@@ -1,0 +1,221 @@
+Docker Notes
+
+DevOps is the methodology used to reduce conflicts between the Dev (development team) and the Ops (Operations team). Various different tools and technologies are used in DevOps. Today we will check Docker(containerization tool).
+
+Earlier everything developed at the dev end was sent to the operations end and there were multiple conflicts between both the teams.
+
+The reason behind the conflict was that at the time of development the version, framework used by the dev team was not the same as the one operations team used for operations at their end so the conflict arose.
+
+So to avoid these conflicts virtual machines or containers were introduced.
+
+Virtual machines use hardware-level virtualization whereas Containers use operating system-level virtualization.
+
+Virtual Machines lead to the wastage of resources as pre-allocation of resources happens in the case of virtual machines and a separate operating system is required on each virtual machine created.
+
+But in the case of containers, there is no allocation of resource as Containers follows operating system-level virtualization. Here operating system helps to share resources between the containers. containers just have 5% of files of the operating system rest they use the host's operating system due to that reason containers are called lightweight.
+
+In the case of Docker, we can say that resources like Memory can be shared instead of preallocation.
+
+Hypervisor is used in the case of Creating Virtual Machines. For creating containers docker-engine is used.
+
+In case a hypervisor is used just above the operating system it's called Type1 Hypervisor. 
+
+In the case of containers, Above hardware, the Operating system is there, and above operating system, Docker Engine is used.
+
+On top of the Docker Engine, the Containers are created. There is no need to install an operating system for containers. Containers use 95% of the operating system from the host machine rest 5% of the files are obtained from Image which is pulled from Dockerhub (the registry where all the docker images are stored) 
+
+Docker is an open-source centralized platform designed to deploy and run applications. We can install docker on any operating system but the docker engine runs natively on Linux distribution.
+
+Docker is written in GO language (Developed by Google).
+
+The Docker engine is used to perform operating system-level virtualization known as containerization.
+
+Docker was released in the year 2013 and was developed by Solomon Hykes. 
+
+Before docker teams usually faced issues of a piece of code working for one team but causing issues for the other team due to different versions and frameworks.
+
+To create a Container first request goes to dockerhub, from dockerhub we get the image to create a container. Containers do not take resources from Hardware directly. Containers take resources from the operating system and due to the operating system the resources are shared instead of pre-allocation.
+
+Containers consist of the operating system files and those files are very small in size due to which we can consider that the containers do not contain an operating system. Just 5% supportive files are there. 
+
+Docker enables us to create images and use those images at every step of development which can help us reduce conflicts in different environments. On running the docker image it becomes a container.
+
+To use docker, HyperV and virtualization should be enabled in the Machine.
+
+The image that comes from Dockerhub is first stored in the Docker Engine so that if next time you want the same image it can used directly from the Docker Engine instead of fetching it again from the Docherhub. Docker uses the images stored in the docker engine to create a container.
+
+Changes can be done only in containers. Images cannot be changed.
+
+Docker can only be used for a small number of containers and there is very little Graphical user interface. Docker does not provide cross-platform compatibility. 
+
+In case the image is developed to run on the Windows Operating system then it cannot be used for Linux operating system.
+
+Docker is useful in case the development operating system and operations operating system is the same. Otherwise, it is not useful.
+
+There is a large number of images available over dockerhub that we can download for our use.
+
+Images can also be created with the help of DockerFile. In the case of Dockerfile, First DockerFile is created, and then based upon the docker file image is created. Based on the image we can create a Container running the image. Images follow layered approach. The commands entered in the dockerfile are followed top to down in layered format. Then the Docker Image can be stored in the docker registry called DockerHub by pushing the image from machine to dockerhub.
+
+Images are stored in the Registry. From Dockerhub we can pull/push any required image to create a container.
+
+Ways to create a docker Image :
+
+There are three ways to create a Docker Image:
+
+1. Take images directly from the DockerHub.
+
+2. Write Dockerfile to create an Image.
+
+3.  Creating an image from the pre-existing docker Container.
+
+A Docker Container holds the entire package that is needed to run the application. The image is just a template. When we run Image it becomes Container.
+
+Containers are like Virtual machines just light in weight.
+
+Docker Commands :
+
+commands to install docker over ec2 instance:
+
+yum install docker -y
+
+which docker: to check if docker is installed or not
+
+docker -v or docker --version to check docker version.
+
+service docker status to check docker status.
+
+service docker start to start docker
+
+docker images: Command to list all the available docker images.
+
+docker search img_name like docker search ubuntu to search the docker image in Dockerhub
+
+docker pull img_name : used to pull the image from Docker Hub. For example docker pull ubuntu
+
+docker run -it --name container_name img_name /bin/bash : command used to run the image to create a container. For example docker run -it --name con1 ubuntu /bin/bash
+
+-it is used to start interactive session within docker container.
+
+--name is used to provide name to container. If we dont use --name then the name of container will be given by docker engine.
+
+/bin/bash is used to run inside the container and launch an interactive bash shell.
+
+img_name can be any image that we can use to create a container. 
+
+docker attach container_name For example docker attach con1 used to go inside the container.
+
+docker ps -a can be run outside the container to check all the containers.
+
+docker ps can be used to check running containers. This command should also be used outside the container. ps stands for the process status.
+
+docker stop container_name to stop container 
+
+docker rm container_name to remove/ delete the container.
+
+docker commit container_name image_name command is used to create an image named image_name from a container named container_name. docker commit can be used to create a docker image.
+
+again we can use the docker run command to create another container from the docker image created above.
+
+docker diff container_name this command is run outside the container to check the difference in the container or changes done after creating the container.
+
+docker files can be created using the vi editor. To create a docker file we use vi Dockerfile command.
+
+vi Dockerfile command will open the Dockerfile where we can write instructions to create a docker image. Dockerfile is followed in the layered format to create a docker image.
+
+example :
+
+vi Dockerfile First we run this command and then the terminal will open.
+
+Now we need to press "i" from the keyboard to insert the data in the file.
+
+now we can start writing the docker file like :
+
+FROM ubuntu  (FROM is used to provide the base image)
+
+RUN echo "The first docket file" (RUN is used to run the commands. Here echo is the Linux command that we use to print data)
+
+now we can save and quit the file by pressing the escape button and then entering: wq 
+
+now we will be back to our terminal and now we can build the docker file created above.
+
+docker build -t myimg . (In the command written docker build is used to create an image out of the docker file, and -t is used to provide the tag or the name. myimg is the name used by us and . is used for the current directory).
+
+now we can use myimg image to create a container out of it using docker run -it --name containername myimg /bin/bash (now in this command docker run to create a container named containername from the image created above named myimg).
+
+Another sample Docker File
+
+FROM ubuntu
+
+WORKDIR /tmp
+
+RUN echo "Creating second docker file and printing the output of echo command in file1.txt" > tmp/file1.txt
+
+ENV myname kamalpreet
+
+COPY file11 /tmp
+
+ADD file2.tar.gz /tmp
+
+In the above Dockerfile ubuntu is the base image and WORKDIR is used to specify the working directory. In our case, we created a working directory as tmp.
+
+RUN is used to run the commands. In our case, we are using the echo command to print and redirect the output to the file1.txt file.
+
+ENV is used to create the variable. After running the Dockerfile if we use $myname we will get kamalpreet as output.
+
+COPY command is used to copy files from the remote system. If file11 is there in the remote system it will be copied to the /tmp folder.
+
+ADD command is similar to the COPY command and in most cases, we should use the COPY command. ADD command is used in case we want some extra functionality like extracting the files or URLs.
+
+Docker Volume: Docker Volume is the directory that is declared inside one container but can be shared with other containers as well.
+
+first, we have to create a directory as volume and need to share that volume with other containers.
+
+Even if we stop the container the volume will still be shared.
+
+we can declare the directory as volume only while creating the container, we can't create volume from the existing container.
+
+volume can be shared with any number of containers.
+
+Volume can be mapped in two ways. The first one is host to container and the second is container to container.
+
+Volume can be created in two ways:
+
+1. Using Dockerfile
+
+2. using -v in docker run command like docker run -it --name container1 -v /volume_name ubuntu /bin/bash (in this command /volume_name is the name of a directory which we need to create as volume and container1 is the name of container we are creating). 
+
+Dockerfile to create volume :
+
+FROM ubuntu
+
+VOLUME ['/MYVOLUME'] 
+
+/MYVOLUME is the already existing directory which we are changing to Volume.
+
+Furthermore, we can create an image out of this Dockerfile using docker build -t myimg .
+
+now we can create a container from the image myimg created above using docker run -it --name container_name myimg /bin/bash command
+
+Now to share the volume with another container we can use 
+
+docker run -it --name container2 --privileged=true --volume-from container 1 ubuntu /bin/bash (container2 is the name of the new container with which we need to share volume, container1 is the container which contains volume, --privileged=true give extended permissions to the container and --volume-from is used to mount volume from one container to another.)
+
+How to expose port in Docker: docker run -td --name techserver1 -p 80:80 means docker run -td --name techserver -p hostport:containerport.
+
+-td is used for the daemon mode.
+
+docker port containername can be used to check the details of the ports for containers.
+
+docker exec -it techserver1 further can be used to attach to the container techserver1.
+
+docker exec command is similar to the docker attach command. Just docker exec command is used to create a new process in the container's environment and connect the standard input, and output of the process inside the container to the corresponding standard input and output. It's specifically used to run new things in already started containers be it shell or process.
+
+docker push command can be used to push the docker image to the docker hub. For pushing docker images to the docker hub first dockerhub account should be there and we can use docker push dockerID/imagename. DockerID is the username in the docker registry and imagename is the name of the image that needs to be pushed.
+
+docker stop $(docker ps -q) to stop all the running containers
+
+docker rm $(docker ps -a -q) to delete all the docker containers.
+
+docker rmi -f $(docker images -q) to forcefully remove/delete all the images
+
+-q is used to provide IDs or short digests instead of complete information, -f is used for forcefully.
