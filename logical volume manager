@@ -1,0 +1,51 @@
+**LVM (Logical Volume Manager) - Quick Guide**
+
+LVM (Logical Volume Manager) is a flexible and powerful storage management tool in Linux that allows for dynamic resizing, disk pooling, and snapshot creation. It provides a more efficient and scalable approach to managing disk space compared to traditional partitioning.
+
+### **1. LVM Components**
+- **Physical Volume (PV):** A raw disk or partition that LVM manages.
+  - Command: `pvcreate /dev/sdb /dev/sdc`
+- **Volume Group (VG):** A storage pool made up of one or more PVs.
+  - Command: `vgcreate vg_data /dev/sdb /dev/sdc`
+- **Logical Volume (LV):** A virtual partition created from a VG.
+  - Command: `lvcreate -L 10G -n lv_home vg_data`
+
+### **2. Managing LVM**
+- **Check LVM Status:**
+  - `pvs` (List physical volumes)
+  - `vgs` (List volume groups)
+  - `lvs` (List logical volumes)
+
+- **Extend a Logical Volume:**
+  ```bash
+  lvextend -L +5G /dev/vg_data/lv_home  
+  resize2fs /dev/vg_data/lv_home  
+  ```
+
+- **Reduce a Logical Volume:**
+  ```bash
+  umount /dev/vg_data/lv_home  
+  resize2fs /dev/vg_data/lv_home 5G  
+  lvreduce -L 5G /dev/vg_data/lv_home  
+  mount /dev/vg_data/lv_home /mnt/home  
+  ```
+
+- **Add a New Disk to an Existing Volume Group:**
+  ```bash
+  pvcreate /dev/sdd  
+  vgextend vg_data /dev/sdd  
+  ```
+
+- **Create a Snapshot (Backup):**
+  ```bash
+  lvcreate -L 2G -s -n lv_backup /dev/vg_data/lv_home  
+  ```
+
+### **3. Benefits of Using LVM**
+✅ **Easier resizing and expansion** – No need to repartition disks.
+✅ **Combines multiple disks** – Allows flexible storage allocation.
+✅ **Snapshots for backup** – Enables quick recovery.
+✅ **Better performance** – Supports striping and mirroring.
+
+LVM simplifies disk management and is widely used in enterprise environments, cloud systems, and virtualization setups. Understanding these commands and principles will help you efficiently manage storage on Linux systems.
+
